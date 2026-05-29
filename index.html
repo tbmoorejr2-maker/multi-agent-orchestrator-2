@@ -157,7 +157,7 @@
             try {
                 // Connects dynamically directly to your running cloud container Space
                 // REPLACE "YOUR_HUGGING_FACE_USERNAME" WITH YOUR ACTUAL HF USERNAME BELOW:
-                const response = await fetch('https://Tomaiagent-multi-agent-practice.hf.space/api/predict', {
+                const response = await fetch('https://Tomaiagent-multi-agent-practice.hf.space/gradio_api/run/predict',{
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ data: [query] })
