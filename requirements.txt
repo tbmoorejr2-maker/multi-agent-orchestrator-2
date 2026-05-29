@@ -1,3 +1,5 @@
-groq  
-langchain  
-langgraph 
+groq
+gradio
+langchain
+langgraph
+python-dotenv
