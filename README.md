@@ -1,6 +1,6 @@
 ---
 title: Multi Agent Orchestrator
-emoji: ??
+emoji: 🧠
 colorFrom: blue
 colorTo: indigo
 sdk: gradio
