@@ -9,7 +9,7 @@ from langgraph.graph import StateGraph, START, END
 # 1. Load environment variables & Initialize our free LLM
 load_dotenv()
 # We use llama3-70b via Groq because it excels at logical routing and agent orchestration
-llm = ChatGroq(model="llama-3.3-70b-versatile" , groq_api_key = os.getenv("GROQ_API_KEY")
+llm = ChatGroq(model="llama-3.3-70b-versatile" , groq_api_key = os.getenv("GROQ_API_KEY"))
 
 # 2. Define the Shared State (The memory notebook our agents pass around)
 class AgentState(TypedDict):
