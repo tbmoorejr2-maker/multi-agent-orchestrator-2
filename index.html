@@ -146,63 +146,59 @@
 
     <script>
         // ASYNC API CONNECTIVITY PATTERN
-        async function sendMessage() {
-            const inputField = document.getElementById('userInput');
-            const chatLogs = document.getElementById('chatLogs');
-            const query = inputField.value.trim();
-            
-            if (!query) return;
+       async function sendMessage() {
+    const inputField = document.getElementById('userInput');
+    const query = inputField.value.trim();
+    
+    if (!query) return;
 
-            // 1. Render User Message immediately
-            appendMessage(query, 'user');
-            inputField.value = '';
+    // 1. Render User Message immediately
+    appendMessage(query, 'user');
+    inputField.value = '';
 
-            // 2. Render Temporary Loading State
-            const loadingDiv = appendMessage('Orchestrator thinking...', 'agent');
+    // 2. Render Temporary Loading State
+    const loadingDiv = appendMessage('Orchestrator thinking...', 'agent');
 
-            try {
-                // Connects dynamically directly to your running cloud container Space
-                // REPLACE "YOUR_HUGGING_FACE_USERNAME" WITH YOUR ACTUAL HF USERNAME BELOW:
-                const response = await fetch('https://Tomaiagent-multi-agent-practice.hf.space/gradio_api/run/predict',{
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: [query] })
-                });
+    try {
+        // Connects natively using the Gradio Client loaded in your head tag
+        const app = await window.GradioClient.connect("Tomaiagent/multi-agent-practice");
+        
+        // Execute the prediction payload safely through the SDK queue
+        const result = await app.predict("/predict", [query]);
+        
+        // Remove loading message
+        loadingDiv.remove();
 
-                const json = await response.json();
-                
-                // Remove loading message
-                loadingDiv.remove();
-
-                // 3. Render Agent Response Data Output
-                if (json.data && json.data[0]) {
-                    appendMessage(json.data[0], 'agent');
-                } else {
-                    appendMessage("System responded successfully, but returned an empty structural payload.", 'agent');
-                }
-
-            } catch (error) {
-                loadingDiv.remove();
-                appendMessage("API Route Error: Unable to communicate with the Hugging Face space. Ensure your Space container is set to public or running.", 'agent');
-                console.error("Gateway Error Details:", error);
-            }
+        // 3. Render Agent Response Data Output
+        const reply = result.data[0];
+        if (reply) {
+            appendMessage(reply, 'agent');
+        } else {
+            appendMessage("System responded successfully, but returned an empty structural payload.", 'agent');
         }
 
-        function appendMessage(text, sender) {
-            const chatLogs = document.getElementById('chatLogs');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${sender}`;
-            msgDiv.innerText = text;
-            chatLogs.appendChild(msgDiv);
-            chatLogs.scrollTop = chatLogs.scrollHeight; // Auto-scrolls
-            return msgDiv;
-        }
+    } catch (error) {
+        loadingDiv.remove();
+        appendMessage("API Route Error: Unable to communicate with the Hugging Face space safely. Check your container console.", 'agent');
+        console.error("Gateway Error Details:", error);
+    }
+}
 
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
+function appendMessage(text, sender) {
+    const chatLogs = document.getElementById('chatLogs');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message ${sender}`;
+    msgDiv.innerText = text;
+    chatLogs.appendChild(msgDiv);
+    chatLogs.scrollTop = chatLogs.scrollHeight; // Auto-scrolls
+    return msgDiv;
+}
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
     </script>
 </body>
 </html>
