@@ -161,7 +161,7 @@
 
     try {
         // Connects natively using the Gradio Client loaded in your head tag
-        const app = await window.GradioClient.connect("Tomaiagent/multi-agent-practice");
+        const app = await window.GradioClient.connect("Tomaiagent/multi-agent-orchestrator");
         
         // Execute the prediction payload safely through the SDK queue
         const result = await app.predict("/predict", [query]);
